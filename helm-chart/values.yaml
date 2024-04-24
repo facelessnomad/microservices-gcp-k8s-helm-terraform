@@ -26,15 +26,67 @@ frontend:
 
 emailService:
   name: emailservice
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+    limits: 
+      cpu: 200m
+      memory: 128Mi
+  service:
+    type: ClusterIP
+    ports:
+      name: grpc
+      sourcePort: 5000
+      targetPort: 8080
 
 productCatalogService:
   name: productcatalogservice
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+  service:
+    type: ClusterIP
+    ports:
+      name: grpc
+      sourcePort: 3550
+      targetPort: 3550
 
 currencyService:
   name: currencyservice
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+  service:
+    type: ClusterIP
+    ports:
+      name: grpc
+      sourcePort: 7000
+      targetPort: 7000
 
 cartService:
   name: cartservice
+  resources:
+    requests:
+      cpu: 200m
+      memory: 64Mi
+    limits:
+      cpu: 300m
+      memory: 128Mi
+  service:
+    type: ClusterIP
+    ports:
+      name: grpc
+      sourcePort: 7070
+      targetPort: 7070
 
 recommendationService:
   name: recommendationservice

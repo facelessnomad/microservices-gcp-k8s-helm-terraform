@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: currencyservice
+  name: {{ .Values.currencyService.name }}
 spec:
   selector:
     matchLabels:
-      app: currencyservice
+      app: {{ .Values.currencyService.name }}
   template:
     metadata:
       labels:
-        app: currencyservice
+        app: {{ .Values.currencyService.name }}
     spec:
       serviceAccountName: default
       terminationGracePeriodSeconds: 5
@@ -44,21 +44,21 @@ spec:
             port: 7000
         resources:
           requests:
-            cpu: 100m
-            memory: 64Mi
+            cpu: {{ .Values.currencyService.resources.requests.cpu }}
+            memory: {{ .Values.currencyService.resources.requests.memory }}
           limits:
-            cpu: 200m
-            memory: 128Mi
+            cpu: {{ .Values.currencyService.resources.limits.cpu }}
+            memory: {{ .Values.currencyService.resources.limits.memory }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: currencyservice
+  name: {{ .Values.currencyService.name }}
 spec:
-  type: ClusterIP
+  type: {{ .Values.currencyService.service.type }}
   selector:
-    app: currencyservice
+    app: {{ .Values.currencyService.name }}
   ports:
-  - name: grpc
-    port: 7000
-    targetPort: 7000
+  - name: {{ .Values.currencyService.service.ports.name }}
+    port: {{ .Values.currencyService.service.ports.sourcePort }}
+    targetPort: {{ .Values.currencyService.service.ports.targetPort }}

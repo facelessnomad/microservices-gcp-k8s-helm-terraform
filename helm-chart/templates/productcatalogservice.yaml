@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: productcatalogservice
+  name: {{ .Values.productCatalogService.name }}
 spec:
   selector:
     matchLabels:
-      app: productcatalogservice
+      app: {{ .Values.productCatalogService.name }}
   template:
     metadata:
       labels:
-        app: productcatalogservice
+        app: {{ .Values.productCatalogService.name }}
     spec:
       serviceAccountName: default
       terminationGracePeriodSeconds: 5
@@ -27,7 +27,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: gcr.io/google-samples/microservices-demo/productcatalogservice:v0.9.0
+        image: "{{ .Values.images.repository }}/{{ .Values.productCatalogService.name }}:{{ .Values.images.tag }}"
         ports:
         - containerPort: 3550
         env:
@@ -43,21 +43,21 @@ spec:
             port: 3550
         resources:
           requests:
-            cpu: 100m
-            memory: 64Mi
+            cpu: {{ .Values.productCatalogService.resources.requests.cpu }}
+            memory: {{ .Values.productCatalogService.resources.requests.memory }}
           limits:
-            cpu: 200m
-            memory: 128Mi
+            cpu: {{ .Values.productCatalogService.resources.limits.cpu }}
+            memory: {{ .Values.productCatalogService.resources.limits.memory }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: productcatalogservice
+  name: {{ .Values.productCatalogService.name }}
 spec:
-  type: ClusterIP
+  type: {{ .Values.productCatalogService.service.type }}
   selector:
-    app: productcatalogservice
+    app: {{ .Values.productCatalogService.name }}
   ports:
-  - name: grpc
-    port: 3550
-    targetPort: 3550
+  - name: {{ .Values.productCatalogService.service.ports.name }}
+    port: {{ .Values.productCatalogService.service.ports.sourcePort }}
+    targetPort: {{ .Values.productCatalogService.service.ports.targetPort }}

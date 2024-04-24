@@ -45,21 +45,21 @@ spec:
             port: 8080
         resources:
           requests:
-            cpu: 100m
-            memory: 64Mi
+            cpu: {{ .Values.emailService.resources.requests.cpu }}
+            memory: {{ .Values.emailService.resources.requests.memory }}
           limits:
-            cpu: 200m
-            memory: 128Mi
+            cpu: {{ .Values.emailService.resources.limits.cpu }}
+            memory: {{ .Values.emailService.resources.limits.memory }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Values.emailService.name }}
 spec:
-  type: ClusterIP
+  type: {{ .Values.emailService.service.type }}
   selector:
     app: {{ .Values.emailService.name }}
   ports:
-  - name: grpc
-    port: 5000
-    targetPort: 8080
+  - name: {{ .Values.emailService.service.ports.name }}
+    port: {{ .Values.emailService.service.ports.sourcePort }}
+    targetPort: {{ .Values.emailService.service.ports.targetPort }}

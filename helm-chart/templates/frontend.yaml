@@ -30,12 +30,12 @@ spec:
             readOnlyRootFilesystem: true
           image: "{{ .Values.images.repository }}/{{ .Values.frontend.name }}:{{ .Values.images.tag }}"
           ports:
-          - containerPort: 8080
+          - containerPort: {{ .Values.frontend.externalService.ports.targetPort }}
           readinessProbe:
             initialDelaySeconds: 10
             httpGet:
               path: "/_healthz"
-              port: 8080
+              port: {{ .Values.frontend.externalService.ports.targetPort }}
               httpHeaders:
               - name: "Cookie"
                 value: "shop_session-id=x-readiness-probe"
@@ -43,7 +43,7 @@ spec:
             initialDelaySeconds: 10
             httpGet:
               path: "/_healthz"
-              port: 8080
+              port: {{ .Values.frontend.externalService.ports.targetPort }}
               httpHeaders:
               - name: "Cookie"
                 value: "shop_session-id=x-liveness-probe"
@@ -51,19 +51,19 @@ spec:
           - name: PORT
             value: "8080"
           - name: PRODUCT_CATALOG_SERVICE_ADDR
-            value: "{{ .Values.productCatalogService.name }}:3550"
+            value: "{{ .Values.productCatalogService.name }}:{{ .Values.productCatalogService.service.ports.targetPort}}"
           - name: CURRENCY_SERVICE_ADDR
-            value: "{{ .Values.currencyService.name }}:7000"
+            value: "{{ .Values.currencyService.name }}:{{ .Values.currencyService.service.ports.targetPort}}"
           - name: CART_SERVICE_ADDR
-            value: "{{ .Values.cartService.name }}:7070"
+            value: "{{ .Values.cartService.name }}:{{ .Values.cartService.service.ports.targetPort}}"
           - name: RECOMMENDATION_SERVICE_ADDR
-            value: "{{ .Values.recommendationService.name }}:8080"
+            value: "{{ .Values.recommendationService.name }}:{{ .Values.recommendationService.service.ports.targetPort}}"
           - name: SHIPPING_SERVICE_ADDR
-            value: "{{ .Values.shippingService.name }}:50051"
+            value: "{{ .Values.shippingService.name }}:{{ .Values.shippingService.service.ports.targetPort}}"
           - name: CHECKOUT_SERVICE_ADDR
-            value: "{{ .Values.checkoutService.name }}:5050"
+            value: "{{ .Values.checkoutService.name }}:{{ .Values.checkoutService.service.ports.targetPort}}"
           - name: AD_SERVICE_ADDR
-            value: "{{ .Values.adService.name }}:9555"
+            value: "{{ .Values.adService.name }}:{{ .Values.adService.service.ports.targetPort}}"
           # # ENV_PLATFORM: One of: local, gcp, aws, azure, onprem, alibaba
           # # When not set, defaults to "local" unless running in GKE, otherwies auto-sets to gcp
           # - name: ENV_PLATFORM

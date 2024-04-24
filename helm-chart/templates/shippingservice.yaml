@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: shippingservice
+  name: {{ .Values.shippingService.name }}
 spec:
   selector:
     matchLabels:
-      app: shippingservice
+      app: {{ .Values.shippingService.name }}
   template:
     metadata:
       labels:
-        app: shippingservice
+        app: {{ .Values.shippingService.name }}
     spec:
       serviceAccountName: default
       securityContext:
@@ -26,7 +26,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: gcr.io/google-samples/microservices-demo/shippingservice:v0.9.0
+        image: "{{ .Values.images.repository }}/{{ .Values.shippingService.name }}:{{ .Values.images.tag }}"
         ports:
         - containerPort: 50051
         env:
@@ -43,21 +43,21 @@ spec:
             port: 50051
         resources:
           requests:
-            cpu: 100m
-            memory: 64Mi
+            cpu: {{ .Values.recommendationService.resources.requests.cpu }}
+            memory: {{ .Values.recommendationService.resources.requests.memory }}
           limits:
-            cpu: 200m
-            memory: 128Mi
+            cpu: {{ .Values.recommendationService.resources.limits.cpu }}
+            memory: {{ .Values.recommendationService.resources.limits.memory }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: shippingservice
+  name: {{ .Values.productCatalogService.name }}
 spec:
-  type: ClusterIP
+  type: {{ .Values.productCatalogService.service.type }}
   selector:
-    app: shippingservice
+    app: {{ .Values.productCatalogService.name }}
   ports:
-  - name: grpc
-    port: 50051
-    targetPort: 50051
+  - name: {{ .Values.productCatalogService.service.ports.name }}
+    port: {{ .Values.productCatalogService.service.ports.sourcePort }}
+    targetPort: {{ .Values.productCatalogService.service.ports.targetPort }}

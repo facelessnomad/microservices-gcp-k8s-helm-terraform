@@ -106,6 +106,19 @@ recommendationService:
 
 shippingService:
   name: shippingservice
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+  service:
+    type: ClusterIP
+    ports:
+      name: grpc
+      sourcePort: 50051
+      targetPort: 50051  
 
 checkoutService:
   name: checkoutService

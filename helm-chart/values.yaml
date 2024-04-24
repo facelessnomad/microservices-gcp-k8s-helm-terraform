@@ -1,0 +1,55 @@
+images:
+  repository: gcr.io/google-samples/microservices-demo
+  tag: v0.9.0
+
+frontend:
+  name: frontend
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+  service:
+    type: ClusterIP
+    ports:
+      name: http
+      sourcePort: 80
+      targetPort: 80
+  externalService:
+    type: LoadBalancer
+    ports:
+      name: http
+      sourcePort: 80
+      targetPort: 8080
+
+emailService:
+  name: emailservice
+
+productCatalogService:
+  name: productcatalogservice
+
+currencyService:
+  name: currencyservice
+
+cartService:
+  name: cartservice
+
+recommendationService:
+  name: recommendationservice
+
+shippingService:
+  name: shippingservice
+
+checkoutService:
+  name: checkoutService
+
+adService:
+  name: adservice
+
+paymentService:
+  name: paymentservice
+
+loadGenerator:
+  name: loadgenerator

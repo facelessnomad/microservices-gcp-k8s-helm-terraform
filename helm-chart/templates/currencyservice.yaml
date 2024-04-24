@@ -27,7 +27,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: gcr.io/google-samples/microservices-demo/currencyservice:v0.9.0
+        image: "{{ .Values.images.repository }}/{{ .Values.currencyService.name }}:{{ .Values.images.tag }}"
         ports:
         - name: grpc
           containerPort: 7000

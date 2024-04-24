@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: adservice
+  name: {{ .Values.adService.name }}
 spec:
   selector:
     matchLabels:
-      app: adservice
+      app: {{ .Values.adService.name }}
   template:
     metadata:
       labels:
-        app: adservice
+        app: {{ .Values.adService.name }}
     spec:
       serviceAccountName: default
       terminationGracePeriodSeconds: 5
@@ -27,39 +27,39 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: gcr.io/google-samples/microservices-demo/adservice:v0.9.0
+        image: "{{ .Values.images.repository }}/{{ .Values.adService.name }}:{{ .Values.images.tag }}"
         ports:
-        - containerPort: 9555
+        - containerPort: {{ .Values.adService.service.ports.targetPort }}
         env:
         - name: PORT
-          value: "9555"
+          value: "{{ .Values.adService.service.ports.targetPort }}"
         resources:
           requests:
-            cpu: 200m
-            memory: 180Mi
+            cpu: {{ .Values.paymentService.resources.requests.cpu }}
+            memory: {{ .Values.paymentService.resources.requests.memory }}
           limits:
-            cpu: 300m
-            memory: 300Mi
+            cpu: {{ .Values.paymentService.resources.limits.cpu }}
+            memory: {{ .Values.paymentService.resources.limits.memory }}
         readinessProbe:
           initialDelaySeconds: 20
           periodSeconds: 15
           grpc:
-            port: 9555
+            port: {{ .Values.adService.service.ports.targetPort }}
         livenessProbe:
           initialDelaySeconds: 20
           periodSeconds: 15
           grpc:
-            port: 9555
+            port: {{ .Values.adService.service.ports.targetPort }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: adservice
+  name: {{ .Values.paymentService.name }}
 spec:
-  type: ClusterIP
+  type: {{ .Values.paymentService.service.type }}
   selector:
-    app: adservice
+    app: {{ .Values.paymentService.name }}
   ports:
-  - name: grpc
-    port: 9555
-    targetPort: 9555
+  - name: {{ .Values.paymentService.service.ports.name }}
+    port: {{ .Values.paymentService.service.ports.sourcePort }}
+    targetPort: {{ .Values.paymentService.service.ports.targetPort }}

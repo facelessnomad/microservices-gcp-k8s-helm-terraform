@@ -90,6 +90,19 @@ cartService:
 
 recommendationService:
   name: recommendationservice
+  resources:
+    requests:
+      cpu: 100m
+      memory: 220Mi
+    limits:
+      cpu: 200m
+      memory: 450Mi
+  service:
+    type: ClusterIP
+    ports:
+      name: grpc
+      sourcePort: 8080
+      targetPort: 8080 
 
 shippingService:
   name: shippingservice

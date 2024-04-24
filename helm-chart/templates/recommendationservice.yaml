@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: recommendationservice
+  name: {{ .Values.recommendationService.name }}
 spec:
   selector:
     matchLabels:
-      app: recommendationservice
+      app: {{ .Values.recommendationService.name }}
   template:
     metadata:
       labels:
-        app: recommendationservice
+        app: {{ .Values.recommendationService.name }}
     spec:
       serviceAccountName: default
       terminationGracePeriodSeconds: 5
@@ -27,7 +27,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: gcr.io/google-samples/microservices-demo/recommendationservice:v0.9.0
+        image: "{{ .Values.images.repository }}/{{ .Values.recommendationService.name }}:{{ .Values.images.tag }}"
         ports:
         - containerPort: 8080
         readinessProbe:
@@ -47,21 +47,21 @@ spec:
           value: "1"
         resources:
           requests:
-            cpu: 100m
-            memory: 220Mi
+            cpu: {{ .Values.recommendationService.resources.requests.cpu }}
+            memory: {{ .Values.recommendationService.resources.requests.memory }}
           limits:
-            cpu: 200m
-            memory: 450Mi
+            cpu: {{ .Values.recommendationService.resources.limits.cpu }}
+            memory: {{ .Values.recommendationService.resources.limits.memory }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: recommendationservice
+  name: {{ .Values.recommendationService.name }}
 spec:
-  type: ClusterIP
+  type: {{ .Values.recommendationService.service.type }}
   selector:
-    app: recommendationservice
+    app: {{ .Values.recommendationService.name }}
   ports:
-  - name: grpc
-    port: 8080
-    targetPort: 8080
+  - name: {{ .Values.recommendationService.service.ports.name }}
+    port: {{ .Values.recommendationService.service.ports.sourcePort }}
+    targetPort: {{ .Values.recommendationService.service.ports.targetPort }}

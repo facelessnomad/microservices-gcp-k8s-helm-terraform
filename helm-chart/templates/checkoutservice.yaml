@@ -50,13 +50,13 @@ spec:
             value: "{{ .Values.currencyService.name }}:7000"
           - name: CART_SERVICE_ADDR
             value: "{{ .Values.cartService.name }}:7070"
-        resources:
-          requests:
-            cpu: {{ .Values.checkoutService.resources.requests.cpu }}
-            memory: {{ .Values.checkoutService.resources.requests.memory }}
-          limits:
-            cpu: {{ .Values.checkoutService.resources.limits.cpu }}
-            memory: {{ .Values.checkoutService.resources.limits.memory }}
+          resources:
+            requests:
+              cpu: {{ .Values.checkoutService.resources.requests.cpu }}
+              memory: {{ .Values.checkoutService.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.checkoutService.resources.limits.cpu }}
+              memory: {{ .Values.checkoutService.resources.limits.memory }}
 ---
 apiVersion: v1
 kind: Service

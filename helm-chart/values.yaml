@@ -121,7 +121,7 @@ shippingService:
       targetPort: 50051  
 
 checkoutService:
-  name: checkoutService
+  name: checkoutservice
   resources:
     requests:
       cpu: 100m
@@ -133,7 +133,7 @@ checkoutService:
     type: ClusterIP
     ports:
       name: grpc
-      port: 5050
+      sourcePort: 5050
       targetPort: 5050   
 
 adService:
@@ -149,7 +149,7 @@ adService:
     type: ClusterIP
     ports:
       name: grpc
-      port: 9555
+      sourcePort: 9555
       targetPort: 9555  
 
 paymentService:
@@ -165,7 +165,7 @@ paymentService:
     type: ClusterIP
     ports:
       name: grpc
-      port: 50051
+      sourcePort: 50051
       targetPort: 50051 
 
 loadGenerator:

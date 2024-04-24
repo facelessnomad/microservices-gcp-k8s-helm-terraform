@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: loadgenerator
+  name: {{ .Values.loadGenerator.name }}
 spec:
   selector:
     matchLabels:
-      app: loadgenerator
+      app: {{ .Values.loadGenerator.name }}
   replicas: 1
   template:
     metadata:
       labels:
-        app: loadgenerator
+        app: {{ .Values.loadGenerator.name }}
       annotations:
         sidecar.istio.io/rewriteAppHTTPProbers: "true"
     spec:
@@ -44,7 +44,7 @@ spec:
         image: busybox:latest
         env:
         - name: FRONTEND_ADDR
-          value: "frontend:80"
+          value: "{{ .Values.frontend.name }}:80"
       containers:
       - name: main
         securityContext:
@@ -54,16 +54,16 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: gcr.io/google-samples/microservices-demo/loadgenerator:v0.9.0
+        image: "{{ .Values.images.repository }}/{{ .Values.loadGenerator.name }}:{{ .Values.images.tag }}"
         env:
         - name: FRONTEND_ADDR
-          value: "frontend:80"
+          value: "{{ .Values.frontend.name }}:80"
         - name: USERS
           value: "10"
         resources:
           requests:
-            cpu: 300m
-            memory: 256Mi
+            cpu: {{ .Values.loadGenerator.resources.requests.cpu }}
+            memory: {{ .Values.loadGenerator.resources.requests.memory }}
           limits:
-            cpu: 500m
-            memory: 512Mi
+            cpu: {{ .Values.loadGenerator.resources.limits.cpu }}
+            memory: {{ .Values.loadGenerator.resources.limits.memory }}

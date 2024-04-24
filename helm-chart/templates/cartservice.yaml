@@ -27,7 +27,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: gcr.io/google-samples/microservices-demo/cartservice:v0.9.0
+        image: "{{ .Values.images.repository }}/{{ .Values.cartService.name }}:{{ .Values.images.tag }}"
         ports:
         - containerPort: 7070
         env:

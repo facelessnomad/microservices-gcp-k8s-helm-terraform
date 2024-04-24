@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: checkoutservice
+  name: {{ .Values.checkoutService.name }}
 spec:
   selector:
     matchLabels:
-      app: checkoutservice
+      app: {{ .Values.checkoutService.name }}
   template:
     metadata:
       labels:
-        app: checkoutservice
+        app: {{ .Values.checkoutService.name }}
     spec:
       serviceAccountName: default
       securityContext:
@@ -26,7 +26,7 @@ spec:
                 - ALL
             privileged: false
             readOnlyRootFilesystem: true
-          image: gcr.io/google-samples/microservices-demo/checkoutservice:v0.9.0
+          image: "{{ .Values.images.repository }}/{{ .Values.checkoutService.name }}:{{ .Values.images.tag }}"
           ports:
           - containerPort: 5050
           readinessProbe:
@@ -39,34 +39,34 @@ spec:
           - name: PORT
             value: "5050"
           - name: PRODUCT_CATALOG_SERVICE_ADDR
-            value: "productcatalogservice:3550"
+            value: "{{ .Values.productCatalogService.name }}:3550"
           - name: SHIPPING_SERVICE_ADDR
-            value: "shippingservice:50051"
+            value: "{{ .Values.shippingService.name }}:50051"
           - name: PAYMENT_SERVICE_ADDR
-            value: "paymentservice:50051"
+            value: "{{ .Values.paymentService.name }}:50051"
           - name: EMAIL_SERVICE_ADDR
-            value: "emailservice:5000"
+            value: "{{ .Values.emailService.name }}:5000"
           - name: CURRENCY_SERVICE_ADDR
-            value: "currencyservice:7000"
+            value: "{{ .Values.currencyService.name }}:7000"
           - name: CART_SERVICE_ADDR
-            value: "cartservice:7070"
-          resources:
-            requests:
-              cpu: 100m
-              memory: 64Mi
-            limits:
-              cpu: 200m
-              memory: 128Mi
+            value: "{{ .Values.cartService.name }}:7070"
+        resources:
+          requests:
+            cpu: {{ .Values.checkoutService.resources.requests.cpu }}
+            memory: {{ .Values.checkoutService.resources.requests.memory }}
+          limits:
+            cpu: {{ .Values.checkoutService.resources.limits.cpu }}
+            memory: {{ .Values.checkoutService.resources.limits.memory }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: checkoutservice
+  name: {{ .Values.checkoutService.name }}
 spec:
-  type: ClusterIP
+  type: {{ .Values.checkoutService.service.type }}
   selector:
-    app: checkoutservice
+    app: {{ .Values.checkoutService.name }}
   ports:
-  - name: grpc
-    port: 5050
-    targetPort: 5050
+  - name: {{ .Values.checkoutService.service.ports.name }}
+    port: {{ .Values.checkoutService.service.ports.sourcePort }}
+    targetPort: {{ .Values.checkoutService.service.ports.targetPort }}

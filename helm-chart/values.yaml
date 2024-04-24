@@ -122,12 +122,38 @@ shippingService:
 
 checkoutService:
   name: checkoutService
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+  service:  
+    type: ClusterIP
+    ports:
+      name: grpc
+      port: 5050
+      targetPort: 5050   
 
 adService:
   name: adservice
 
 paymentService:
   name: paymentservice
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+  service:
+    type: ClusterIP
+    ports:
+      name: grpc
+      port: 50051
+      targetPort: 50051 
 
 loadGenerator:
   name: loadgenerator

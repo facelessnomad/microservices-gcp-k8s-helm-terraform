@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: paymentservice
+  name: {{ .Values.paymentService.name }}
 spec:
   selector:
     matchLabels:
-      app: paymentservice
+      app: {{ .Values.paymentService.name }}
   template:
     metadata:
       labels:
-        app: paymentservice
+        app: {{ .Values.paymentService.name }}
     spec:
       serviceAccountName: default
       terminationGracePeriodSeconds: 5
@@ -27,7 +27,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: gcr.io/google-samples/microservices-demo/paymentservice:v0.9.0
+        image: "{{ .Values.images.repository }}/{{ .Values.paymentService.name }}:{{ .Values.images.tag }}"
         ports:
         - containerPort: 50051
         env:
@@ -43,21 +43,21 @@ spec:
             port: 50051
         resources:
           requests:
-            cpu: 100m
-            memory: 64Mi
+            cpu: {{ .Values.paymentService.resources.requests.cpu }}
+            memory: {{ .Values.paymentService.resources.requests.memory }}
           limits:
-            cpu: 200m
-            memory: 128Mi
+            cpu: {{ .Values.paymentService.resources.limits.cpu }}
+            memory: {{ .Values.paymentService.resources.limits.memory }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: paymentservice
+  name: {{ .Values.paymentService.name }}
 spec:
-  type: ClusterIP
+  type: {{ .Values.paymentService.service.type }}
   selector:
-    app: paymentservice
+    app: {{ .Values.paymentService.name }}
   ports:
-  - name: grpc
-    port: 50051
-    targetPort: 50051
+  - name: {{ .Values.paymentService.service.ports.name }}
+    port: {{ .Values.paymentService.service.ports.sourcePort }}
+    targetPort: {{ .Values.paymentService.service.ports.targetPort }}

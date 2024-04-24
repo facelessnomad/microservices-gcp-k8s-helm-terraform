@@ -43,21 +43,21 @@ spec:
             port: 50051
         resources:
           requests:
-            cpu: {{ .Values.recommendationService.resources.requests.cpu }}
-            memory: {{ .Values.recommendationService.resources.requests.memory }}
+            cpu: {{ .Values.shippingService.resources.requests.cpu }}
+            memory: {{ .Values.shippingService.resources.requests.memory }}
           limits:
-            cpu: {{ .Values.recommendationService.resources.limits.cpu }}
-            memory: {{ .Values.recommendationService.resources.limits.memory }}
+            cpu: {{ .Values.shippingService.resources.limits.cpu }}
+            memory: {{ .Values.shippingService.resources.limits.memory }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.productCatalogService.name }}
+  name: {{ .Values.shippingService.name }}
 spec:
-  type: {{ .Values.productCatalogService.service.type }}
+  type: {{ .Values.shippingService.service.type }}
   selector:
-    app: {{ .Values.productCatalogService.name }}
+    app: {{ .Values.shippingService.name }}
   ports:
-  - name: {{ .Values.productCatalogService.service.ports.name }}
-    port: {{ .Values.productCatalogService.service.ports.sourcePort }}
-    targetPort: {{ .Values.productCatalogService.service.ports.targetPort }}
+  - name: {{ .Values.shippingService.service.ports.name }}
+    port: {{ .Values.shippingService.service.ports.sourcePort }}
+    targetPort: {{ .Values.shippingService.service.ports.targetPort }}

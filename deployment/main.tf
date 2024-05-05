@@ -7,7 +7,7 @@ data "google_container_engine_versions" "gke_version" {
 }
 
 resource "google_container_cluster" "primary" {
-  name     = "${var.project_id}-gke"
+  name     = "${var.project_id}-gke-${terraform.workspace}"
   location = var.region
 
   # We can't create a cluster with no node pool defined, but we want to only use
@@ -16,6 +16,7 @@ resource "google_container_cluster" "primary" {
   remove_default_node_pool = true
   initial_node_count       = 1
 
+  deletion_protection = false
   network    = google_compute_network.vpc.name
   subnetwork = google_compute_subnetwork.subnet.name
 }
@@ -42,7 +43,7 @@ resource "google_container_node_pool" "primary_nodes" {
     preemptible  = true
     disk_type    = "pd-standard"
     machine_type = "n1-standard-1"
-    tags         = ["gke-node", "${var.project_id}-gke"]
+    tags         = ["gke-node", "${var.project_id}-gke-${terraform.workspace}"]
     metadata = {
       disable-legacy-endpoints = "true"
     }
@@ -51,13 +52,13 @@ resource "google_container_node_pool" "primary_nodes" {
 
 # VPC
 resource "google_compute_network" "vpc" {
-  name                    = "${var.project_id}-vpc"
+  name                    = "${var.project_id}-vpc-${terraform.workspace}"
   auto_create_subnetworks = "false"
 }
 
 # Subnet
 resource "google_compute_subnetwork" "subnet" {
-  name          = "${var.project_id}-subnet"
+  name          = "${var.project_id}-subnet-${terraform.workspace}"
   region        = var.region
   network       = google_compute_network.vpc.name
   ip_cidr_range = "10.10.0.0/24"
@@ -65,7 +66,7 @@ resource "google_compute_subnetwork" "subnet" {
 
 # HELM
 resource "helm_release" "microservices-chart" {
-  name  = "microservices-app"
+  name  = "microservices-app-${terraform.workspace}"
   chart = "${path.module}./helm-chart"
 
   depends_on = [

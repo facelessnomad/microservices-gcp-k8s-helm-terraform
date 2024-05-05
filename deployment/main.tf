@@ -17,13 +17,13 @@ resource "google_container_cluster" "primary" {
   initial_node_count       = 1
 
   deletion_protection = false
-  network    = google_compute_network.vpc.name
-  subnetwork = google_compute_subnetwork.subnet.name
+  network             = google_compute_network.vpc.name
+  subnetwork          = google_compute_subnetwork.subnet.name
 
-  depends_on = [ 
+  depends_on = [
     google_compute_network.vpc,
     google_compute_subnetwork.subnet
-   ]
+  ]
 }
 
 # Separately Managed Node Pool
@@ -54,7 +54,7 @@ resource "google_container_node_pool" "primary_nodes" {
     }
   }
 
-  depends_on = [ google_container_cluster.primary ]
+  depends_on = [google_container_cluster.primary]
 }
 
 # VPC

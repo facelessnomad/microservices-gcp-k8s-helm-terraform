@@ -5,11 +5,6 @@ variable "kube_config_path" {
   default     = "~/.kube/config"
 }
 
-# variable "config_context_cluster" {
-#   type        = string
-#   description = "Config context cluster"
-# }
-
 # GKE VARIABLES
 variable "project_id" {
   type        = string
@@ -23,5 +18,5 @@ variable "region" {
 
 variable "gke_num_nodes" {
   type        = number
-  description = "(optional) describe your variable"
+  description = "Number of nodes"
 }

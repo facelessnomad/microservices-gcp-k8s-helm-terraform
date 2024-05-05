@@ -19,6 +19,11 @@ resource "google_container_cluster" "primary" {
   deletion_protection = false
   network    = google_compute_network.vpc.name
   subnetwork = google_compute_subnetwork.subnet.name
+
+  depends_on = [ 
+    google_compute_network.vpc,
+    google_compute_subnetwork.subnet
+   ]
 }
 
 # Separately Managed Node Pool
@@ -48,6 +53,8 @@ resource "google_container_node_pool" "primary_nodes" {
       disable-legacy-endpoints = "true"
     }
   }
+
+  depends_on = [ google_container_cluster.primary ]
 }
 
 # VPC
@@ -70,6 +77,6 @@ resource "helm_release" "microservices-chart" {
   chart = "${path.module}./helm-chart"
 
   depends_on = [
-    google_container_cluster.primary
+    google_container_node_pool.primary_nodes
   ]
 }
